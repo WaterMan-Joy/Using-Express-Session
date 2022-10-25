@@ -6,13 +6,12 @@ const app = express();
 
 
 app.use(session({
-    secret: 'mykey',
-    // resave: true,
-    // saveUninitialized: true,
-    // cookie: { secure: true }
+    secret: 'mysecretkey',
+    resave: false,
+    saveUninitialized: false,
 }))
   
-app.use('/viewcount', (req, res) => {
+app.get('/view', (req, res) => {
     if (req.session.count) {
         req.session.count += 1
     }
@@ -22,8 +21,11 @@ app.use('/viewcount', (req, res) => {
     console.log(req.session.count)
     res.send(`count = ${req.session.count}`)
 })
-app.use('/view', (req, res) => {
-    res.send('hello')
+app.get('/register', (req, res) => {
+    const { username = 'Joy' } = req.query;
+    req.session.username = username;
+    console.log(req.session.username);
+    res.redirect('/view');
 })
 
 
